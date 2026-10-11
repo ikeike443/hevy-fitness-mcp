@@ -117,6 +117,8 @@ describe("POST /api/oauth/token", () => {
     expect(res.status).toBe(200);
     const json = await res.json();
     expect(json).toMatchObject({ access_token: "test-bearer-token", token_type: "Bearer" });
+    expect(res.headers.get("cache-control")).toBe("no-store");
+    expect(res.headers.get("pragma")).toBe("no-cache");
   });
 
   it("rejects a wrong client_secret with 401 invalid_client", async () => {
@@ -180,6 +182,8 @@ describe("POST /api/oauth/token", () => {
     );
     expect(res.status).toBe(400);
     expect((await res.json()).error).toBe("unsupported_grant_type");
+    expect(res.headers.get("cache-control")).toBe("no-store");
+    expect(res.headers.get("pragma")).toBe("no-cache");
   });
 
   it("logs and reports a distinct reason for a malformed (unparsable) body", async () => {
